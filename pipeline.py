@@ -22,6 +22,23 @@ class ExamplePipelineTest(Test):
         ### Do some work
         self.assertTrue(True==True)
 
+class CopperDownloadTask(Task):
+    '''
+        DO COPPER HERE
+    '''
+    def do_input(self,feature,settings):
+        # CHECK  do_schedule, then,... do_task 
+        # TODO (for JG) , Enforce Schedule and create executed task log
+        #return self.do_task(feature,settings)
+        pass
+    
+    def do_task(self,feature,settings):
+        '''
+            This function gets called with feature['action'] = <VALUE> at the appropriate times.
+            Do any event work in this method.
+        '''
+        pass
+        
 class ExampleDownloadTask(Task):
     '''
         JG: THIS IS IN DEVELOPMENT. LOOKING AT GENERALIZING TASKS.
@@ -230,12 +247,18 @@ class MwRequest(Request):
 
     
 class System(ProcessingNode):
+    def do_setup(self,key):
+        # Setup Google Cloud Funcs
+        # iterate through registered tasks, and make sure schedule is followed
+        
+        pass
+    
     def get_setting(self,key):
         '''
         get_setting can be over ridden to handle settins in varios ways. In this example we just use a single method
         to contain all system dependencies.
         '''
-        datalake_settings = {"GOOGLE_APPLICATION_CREDENTIALS":"creds.json", 
+        datalake_settings = {"GOOGLE_APPLICATION_CREDENTIALS":"/mnt/dev/dev/MwBasePipeline/creds.json", 
                             "GOOGLE_PROJECT_ID":'mwdatapipelineex',
                              "data_lake_id":'row',           
                              }
@@ -272,7 +295,7 @@ class System(ProcessingNode):
         settings['api_users'] = users
         return settings[key]
     
-    def get_request_class():
+    def get_request_class(self):
         return MwRequest
     
     def set_setting(self,key):
